@@ -57,7 +57,7 @@ local function isRacerGoingBackwards()
 end
 
 function m.getCurrentInputs()
-	return {A=0,B=0}--joypad.read()
+	return joypad.get()
 end
 
 function m.getRacerStats(data)
