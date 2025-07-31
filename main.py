@@ -1,27 +1,28 @@
 import os
 import PIL
-import time
 import subprocess
 import PIL.Image
 
-DESMUME_PATH = r"./DeSmuME-VS2022-Release.exe"
-LUA_SCRIPT_PATH = os.path.abspath(r"mkds-lua-ml-model/src/desmume_bridge.lua")
-ROM_PATH = r"ROMs/Mario Kart DS (Europe) (En,Fr,De,Es,It).nds"
+EMU_PATH = "./EmuHawk.exe"
+LUA_SCRIPT_PATH = os.path.abspath(r"mkds-lua-ml-model/src/MKDS Info.lua")
+ROM_PATH = "ROMs/Mario Kart DS (USA, Australia) (En,Fr,De,Es,It).nds"
 
 # Open game with script active
 def open_rom():
     subprocess.Popen(
         [
-            DESMUME_PATH, 
-            #"--lua-script",
-            #LUA_SCRIPT_PATH,
-            ROM_PATH
-        ], 
-        cwd=os.getcwd()
+            EMU_PATH,
+            f'--rom="{ROM_PATH}"'
+        ]
     )
 
 def get_cur_frame() -> PIL.Image:
-    pass
+    cur_frame_bin = open("mkds-lua-ml-model/data/cur_frame.bin", "r")
+
+    cur_frame_matx = []
+    
+
+    return 
 
 def get_cur_ctrls() -> dict:
     cur_ctrls_bin = open("mkds-lua-ml-model/data/cur_ctrls.bin", "r")

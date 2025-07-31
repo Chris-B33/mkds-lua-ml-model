@@ -1,0 +1,2 @@
+The Lua scripts were heavily adapted from <a href="https://tasvideos.org/GameResources/DS/MarioKartDS">this one</a> I found online.
+This is a <a href="https://datacrystal.tcrf.net/wiki/Super_Mario_Kart/RAM_map">RAM map</a> I found for MKDS.

@@ -1,0 +1,12 @@
+drift_angle=0
+delta_pos=table: 0000020C73813590
+pos=table: 0000020C73813550
+isGrounded=true
+frame=254262
+framesInAir=0
+isGoingBackwards=false
+delta_drift_angle=0
+acceleration=0
+speed=56
+A=0
+B=0
