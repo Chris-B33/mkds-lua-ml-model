@@ -18,8 +18,12 @@ m.addrs = {
 local prevData = {
 	speed = 0,
 	acceleration = 0,
-	pos = {0,0,0},
-	delta_pos = {0,0,0},
+	x = 0,
+	y = 0,
+	z = 0,
+	dx = 0,
+	dy = 0,
+	dz = 0,
 	drift_angle = 0,
 	delta_drift_angle = 0,
 	framesInAir = 0,
@@ -71,12 +75,12 @@ function m.getRacerStats(data)
 	local newData = {
 		speed = curSpeed,
 		acceleration = prevData.speed - curSpeed,
-		pos = curPos,
-		delta_pos = {
-			curPos[1] - prevData.pos[1],
-			curPos[2] - prevData.pos[2],
-			curPos[3] - prevData.pos[3],
-		},
+		x = curPos[1]
+		y = curPos[2]
+		z = curPos[3]
+		dx = prevData.pos[1] - curPos[1]
+		dy = prevData.pos[2] - curPos[2]
+		dz = prevData.pos[3] - curPos[3]
 		drift_angle = curDriftAngle,
 		delta_drift_angle = curDriftAngle - prevData.drift_angle,
 		framesInAir = framesInAir,
