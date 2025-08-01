@@ -17,13 +17,13 @@ end
 local function writeStatsAndCtrls(stats, ctrls)
 	local buffer = ""
 	for stat, value in pairs(stats) do
-		buffer = buffer .. stat .. "=" .. tostring(value) .. "\n"
+		buffer = buffer .. stat .. "=" .. value .. "\n"
 	end
 	for ctrl, value in pairs(ctrls) do
 		buffer = buffer .. ctrl .. "=" .. value .. "\n"
 	end
 
-	local file = io.open("cur_stats_and_ctrls.bin", "w")
+	local file = io.open("../data/cur_stats_and_ctrls.bin", "w")
 	file:write(buffer)
 	file:close()
 end
