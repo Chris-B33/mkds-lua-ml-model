@@ -57,7 +57,9 @@ local function get_pos(data, offset)
 end
 
 local function isRacerGoingBackwards()
-	return false --get_s32(0x17C828, 0) > 0
+	local val = memory.read_u32_le(0x17B854)
+	print(string.format("0x%08X (%d)", val, val))
+	return val > 0
 end
 
 function m.getCurrentInputs()
@@ -75,12 +77,12 @@ function m.getRacerStats(data)
 	local newData = {
 		speed = curSpeed,
 		acceleration = prevData.speed - curSpeed,
-		x = curPos[1]
-		y = curPos[2]
-		z = curPos[3]
-		dx = prevData.pos[1] - curPos[1]
-		dy = prevData.pos[2] - curPos[2]
-		dz = prevData.pos[3] - curPos[3]
+		x = curPos[1],
+		y = curPos[2],
+		z = curPos[3],
+		dx = prevData.x - curPos[1],
+		dy = prevData.y - curPos[2],
+		dz = prevData.z - curPos[3],
 		drift_angle = curDriftAngle,
 		delta_drift_angle = curDriftAngle - prevData.drift_angle,
 		framesInAir = framesInAir,
