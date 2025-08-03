@@ -1,5 +1,6 @@
 local mem = require("mem")
-print(memory.getcurrentmemorydomain())
+local files = require("files")
+
 local function drawHUD(stats)
 	if not stats then
 		gui.text(5, 595, "No racer data")
@@ -14,29 +15,15 @@ local function drawHUD(stats)
 	gui.text(5, 535, string.format("Going Backwards: %s", stats.isGoingBackwards))
 end
 
-local function writeStatsAndCtrls(stats, ctrls)
-	if not stats then return end
-
-	local buffer = ""
-	for stat, value in pairs(stats) do
-		buffer = buffer .. stat .. "=" .. tostring(value) .. "\n"
-	end
-	for ctrl, value in pairs(ctrls) do
-		buffer = buffer .. ctrl .. "=" .. tostring(value) .. "\n"
-	end
-
-	local file = io.open("../data/cur_stats_and_ctrls.bin", "w")
-	file:write(buffer)
-	file:close()
-end
-
 while true do
 	local data = mem.getAllData()
 	local stats = mem.getRacerStats(data)
 	local ctrls = mem.getCurrentInputs()
 
 	drawHUD(stats)
-	writeStatsAndCtrls(stats, ctrls)
+
+	files.sendStatsAndCtrls(stats, ctrls)
+	files.receiveCtrls()
 
 	emu.frameadvance()
 end

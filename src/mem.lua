@@ -7,8 +7,6 @@ local valueForUSVersion = 0x0216F320
 local ptrOffset = 0
 if basePtr ~= 0 and basePtr > 0x02000000 and basePtr < 0x02300000 then
 	ptrOffset = basePtr - valueForUSVersion
-else
-	print("⚠️ Warning: Invalid base pointer, using zero offset.")
 end
 
 m.addrs = {
@@ -57,9 +55,11 @@ local function get_pos(data, offset)
 end
 
 local function isRacerGoingBackwards()
-	local val = memory.read_u32_le(0x17B854)
-	print(string.format("0x%08X (%d)", val, val))
-	return val > 0
+	local prevDomain = memory.getcurrentmemorydomain()
+    memory.usememorydomain("Main RAM")
+    local val = memory.read_s32_le(0x17B854)
+    memory.usememorydomain(prevDomain)
+    return val > 0
 end
 
 function m.getCurrentInputs()
