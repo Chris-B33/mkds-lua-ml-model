@@ -1,7 +1,6 @@
-local mem = require("mem")
-local files = require("files")
+local m = {}
 
-local function drawHUD(stats)
+function m.drawHUD(stats)
 	if not stats then
 		gui.text(5, 595, "No racer data")
 		return
@@ -15,15 +14,4 @@ local function drawHUD(stats)
 	gui.text(5, 535, string.format("Going Backwards: %s", stats.isGoingBackwards))
 end
 
-while true do
-	local data = mem.getAllData()
-	local stats = mem.getRacerStats(data)
-	local ctrls = mem.getCurrentInputs()
-
-	drawHUD(stats)
-
-	files.sendStatsAndCtrls(stats, ctrls)
-	files.receiveCtrls()
-
-	emu.frameadvance()
-end
+return m

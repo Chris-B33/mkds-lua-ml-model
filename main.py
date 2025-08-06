@@ -1,6 +1,8 @@
 import os
+import struct
 import subprocess
 import threading
+import numpy as np
 
 EMU_PATH = "./EmuHawk.exe"
 LUA_SCRIPT_PATH = os.path.abspath(r"mkds-lua-ml-model/src/MKDS Info.lua")
@@ -15,15 +17,13 @@ def open_rom():
     )
 
 def get_cur_frame():
-    cur_frame_bin = open("mkds-lua-ml-model/data/cur_frame.bin", "r")
+    f = open("mkds-lua-ml-model/data/cur_frame.dat", "r")
+    width, height = struct.unpack('<HH', f.read(4))
+    pixel_data = np.frombuffer(f.read(width * height * 4), dtype=np.uint8).reshape((height, width, 4))
+    return pixel_data
 
-    cur_frame_matx = []
-    
-
-    return 
-
-def get_cur_ctrls() -> dict:
-    cur_ctrls_bin = open("mkds-lua-ml-model/data/cur_stats_and_ctrls.bin", "r")
+def get_cur_stats_and_ctrls() -> dict:
+    cur_ctrls_bin = open("mkds-lua-ml-model/data/cur_stats_and_ctrls.dat", "rb")
 
     cur_ctrls = {}
     for line in cur_ctrls_bin.readlines():
@@ -58,7 +58,7 @@ new_ctrls = {
 }
 
 def write_new_ctrls(new_ctrls: dict) -> None:
-    new_ctrls_bin = open("mkds-lua-ml-model/data/new_ctrls.bin", "w+")
+    new_ctrls_bin = open("mkds-lua-ml-model/data/new_ctrls.dat", "w+")
 
     for key, value in new_ctrls.items():
         new_ctrls_bin.write(f"{key}={value}\n")
@@ -67,10 +67,10 @@ def write_new_ctrls(new_ctrls: dict) -> None:
 
 def sendAndReceive():
     while True:
-        get_cur_ctrls()
+        get_cur_stats_and_ctrls()
+        get_cur_frame()
         write_new_ctrls(new_ctrls)
 
 if __name__ == "__main__":
-    '''thread = threading.Thread(target=sendAndReceive)
-    thread.start()'''
-    open_rom()
+    thread = threading.Thread(target=sendAndReceive)
+    thread.start()

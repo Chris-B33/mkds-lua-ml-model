@@ -11,6 +11,7 @@ end
 
 m.addrs = {
 	ptrRacerData = 0x0217ACF8 + ptrOffset,
+	frameImgData = 0x06000000
 }
 
 local prevData = {
@@ -29,12 +30,6 @@ local prevData = {
 	isGoingBackwards = false,
 	frame = 0
 }
-
-function m.getAllData()
-	local ptr = memory.read_u32_le(m.addrs.ptrRacerData)
-	if ptr == 0 then return nil end
-	return memory.read_bytes_as_array(ptr + 1, 0x5a8 - 1)
-end
 
 local function get_s16(data, offset)
 	local u = data[offset] | (data[offset + 1] << 8)
@@ -62,8 +57,10 @@ local function isRacerGoingBackwards()
     return val > 0
 end
 
-function m.getCurrentInputs()
-	return joypad.get()
+function m.getPlayerData()
+	local ptr = memory.read_u32_le(m.addrs.ptrRacerData)
+	if ptr == 0 then return nil end
+	return memory.read_bytes_as_array(ptr + 1, 0x5a8 - 1)
 end
 
 function m.getRacerStats(data)
@@ -93,6 +90,23 @@ function m.getRacerStats(data)
 
 	prevData = newData
 	return newData
+end
+
+function m.getCurrentInputs()
+	return joypad.get()
+end
+
+function m.getCurrentFrame()
+	local buffer = {}
+
+	local width = 256
+	local height = 192
+	local size = width * height * 2
+
+	for i = 0, size - 1 do
+		buffer[i + 1] = string.char(memory.read_u8(m.addrs.frameImgData + i))
+	end
+	return table.concat(buffer)
 end
 
 return m

@@ -2,7 +2,7 @@ local m = {}
 
 function m.sendStatsAndCtrls(stats, ctrls)
 	if not stats then return end
-	local f = assert(io.open("../data/cur_stats_and_ctrls.bin", "w+"))
+	local f = assert(io.open("../data/cur_stats_and_ctrls.dat", "w+"))
 
 	local buffer = ""
 	for stat, value in pairs(stats) do
@@ -17,7 +17,7 @@ function m.sendStatsAndCtrls(stats, ctrls)
 end
 
 function m.receiveCtrls()
-	local file = assert(io.open("../data/new_ctrls.bin", "r"))
+	local file = assert(io.open("../data/new_ctrls.dat", "r"))
 
     local new_ctrls = {}
     for line in file:lines() do
@@ -29,6 +29,16 @@ function m.receiveCtrls()
 
     file:close()
 	joypad.set(new_ctrls)
+end
+
+function m.sendCurrentFrame(frame)
+	local file = io.open("../data/cur_frame.dat", "wb")
+	if not file then return end
+
+	file:write("256,192\n")
+	file:write(frame)
+
+	file:close()
 end
 
 return m

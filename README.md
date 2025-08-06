@@ -8,6 +8,8 @@ The Lua scripts were heavily adapted from <a href="https://tasvideos.org/GameRes
 ## TODO
 #### Lua
 - Send the current frame to Python.
+- Change how memory is read so you can set all addresses needed in a seperate file
+- Potentially create a socket-based pipeline
 
 #### Python
 - Open the ROM in the Bizhawk with the Lua scripts active.
@@ -23,3 +25,6 @@ The Lua scripts were heavily adapted from <a href="https://tasvideos.org/GameRes
 #### Python
 - Read current stats and contrls from a file written by the Lua scripts.
 - Send new controls to a file to be read by the Lua scripts.
+
+## Current Objective
+Get frame info sent by Lua and received and displayed by Python
