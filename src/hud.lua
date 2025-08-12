@@ -12,6 +12,10 @@ function m.drawHUD(stats)
 
 	gui.text(5, 550, string.format("Grounded: %s, framesInAir=%d", stats.isGrounded, stats.framesInAir))
 	gui.text(5, 535, string.format("Going Backwards: %s", stats.isGoingBackwards))
+
+	gui.text(5, 520, string.format("Checkpoint: %s", stats.checkpoint))
+	gui.text(5, 505, string.format("Key Checkpoint: %s", stats.keyCheckpoint))
+	gui.text(5, 490, string.format("Lap: %s", stats.lap))
 end
 
 return m

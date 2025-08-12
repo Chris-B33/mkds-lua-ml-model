@@ -11,7 +11,7 @@ end
 
 m.addrs = {
 	ptrRacerData = 0x0217ACF8 + ptrOffset,
-	frameImgData = 0x06000000
+	ptrCheckNum = 0x021755FC + ptrOffset
 }
 
 local prevData = {
@@ -28,6 +28,9 @@ local prevData = {
 	framesInAir = 0,
 	isGrounded = true,
 	isGoingBackwards = false,
+	checkpoint = 0,
+	keyCheckpoint = 0,
+	lap = 0,
 	frame = 0
 }
 
@@ -63,13 +66,28 @@ function m.getPlayerData()
 	return memory.read_bytes_as_array(ptr + 1, 0x5a8 - 1)
 end
 
-function m.getRacerStats(data)
-	if not data then return nil end
+function m.getCheckpointData()
+	local prevDomain = memory.getcurrentmemorydomain()
+    memory.usememorydomain("Main RAM")
+	local checkpointData = {
+		--checkpoint = memory.read_u8(m.addrs.ptrCheckNum + 0x46),
+		--keyCheckpoint = memory.read_u8(m.addrs.ptrCheckNum + 0x46),
+		lap = memory.read_u8(0x2C8AA0) + 1
+	}
+	memory.usememorydomain(prevDomain)
+	return checkpointData
+end
 
-	local curSpeed = math.floor(get_s32(data, 0x2A8) / 256)
-	local curPos = get_pos(data, 0x80)
-	local curDriftAngle = math.floor(get_s16(data, 0x388) / 256) 
-	local framesInAir = get_s32(data, 0x380)
+function m.getRacerStats()
+	local playerData = m.getPlayerData()
+	local checkpointData = m.getCheckpointData()
+
+	if not playerData or not checkpointData then return nil end
+
+	local curSpeed = math.floor(get_s32(playerData, 0x2A8) / 256)
+	local curPos = get_pos(playerData, 0x80)
+	local curDriftAngle = math.floor(get_s16(playerData, 0x388) / 256) 
+	local framesInAir = get_s32(playerData, 0x380)
 
 	local newData = {
 		speed = curSpeed,
@@ -85,6 +103,9 @@ function m.getRacerStats(data)
 		framesInAir = framesInAir,
 		isGrounded = framesInAir == 0,
 		isGoingBackwards = isRacerGoingBackwards(),
+		checkpoint = checkpointData.checkpoint,
+		keyCheckpoint = checkpointData.keyCheckpoint,
+		lap = checkpointData.lap,
 		frame = emu.framecount()
 	}
 
@@ -96,8 +117,8 @@ function m.getCurrentInputs()
 	return joypad.get()
 end
 
-function m.getCurrentFrame()
-	local buffer = {}
+function m.getCurrentFrame() -- TOO SLOW AND MAY NOT BE NEEDED SO NOT USING
+	local buffer = {} 
 
 	local width = 256
 	local height = 192
