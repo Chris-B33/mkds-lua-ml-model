@@ -31,9 +31,9 @@ end
 
 function m.get_pos(data, offset)
 	return {
-		math.floor(m.get_s32(data, offset + 0)  / 4096),
-		math.floor(m.get_s32(data, offset + 4)  / 4096),
-		math.floor(m.get_s32(data, offset + 8)  / 4096),
+		x=math.floor(m.get_s32(data, offset + 0)  / 4096),
+		y=math.floor(m.get_s32(data, offset + 4)  / 4096),
+		z=math.floor(m.get_s32(data, offset + 8)  / 4096),
 	}
 end
 

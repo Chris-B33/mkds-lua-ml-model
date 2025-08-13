@@ -4,12 +4,14 @@ local files = require("files")
 
 while true do
 	local stats = data.getRacerStats()
+	local RLApplicableRacerStats = data.getRLApplicableRacerStats()
 	local ctrls = data.getCurrentInputs()
 
 	hud.drawHUD(stats)
 
-	files.sendStatsAndCtrls(stats, ctrls)
+	files.sendStatsAndCtrls(RLApplicableRacerStats, ctrls)
 	--files.receiveCtrls()
 
+	if stats then data.prevData = stats end
 	emu.frameadvance()
 end

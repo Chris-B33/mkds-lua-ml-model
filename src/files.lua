@@ -1,15 +1,23 @@
 local m = {}
 
+local function to_number_if_boolean(val)
+		if type(val) == "boolean" then
+			return val and 1 or 0
+		end
+		return val
+	end
+
 function m.sendStatsAndCtrls(stats, ctrls)
 	if not stats then return end
 	local f = assert(io.open("../data/cur_stats_and_ctrls.dat", "w+"))
-
 	local buffer = ""
+
 	for stat, value in pairs(stats) do
-		buffer = buffer .. stat .. "=" .. tostring(value) .. "\n"
+		buffer = buffer .. stat .. "=" .. tostring(to_number_if_boolean(value)) .. "\n"
 	end
+
 	for ctrl, value in pairs(ctrls) do
-		buffer = buffer .. ctrl .. "=" .. tostring(value) .. "\n"
+		buffer = buffer .. ctrl .. "=" .. tostring(to_number_if_boolean(value)) .. "\n"
 	end
 
 	f:write(buffer)
