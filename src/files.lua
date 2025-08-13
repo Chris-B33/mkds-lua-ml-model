@@ -1,23 +1,12 @@
 local m = {}
 
-local function to_number_if_boolean(val)
-		if type(val) == "boolean" then
-			return val and 1 or 0
-		end
-		return val
-	end
-
-function m.sendStatsAndCtrls(stats, ctrls)
+function m.sendStats(stats)
 	if not stats then return end
-	local f = assert(io.open("../data/cur_stats_and_ctrls.dat", "w+"))
+	local f = assert(io.open("../data/cur_stats.dat", "w+"))
 	local buffer = ""
 
 	for stat, value in pairs(stats) do
-		buffer = buffer .. stat .. "=" .. tostring(to_number_if_boolean(value)) .. "\n"
-	end
-
-	for ctrl, value in pairs(ctrls) do
-		buffer = buffer .. ctrl .. "=" .. tostring(to_number_if_boolean(value)) .. "\n"
+		buffer = buffer .. stat .. "=" .. tostring(value) .. "\n"
 	end
 
 	f:write(buffer)
@@ -37,16 +26,6 @@ function m.receiveCtrls()
 
     file:close()
 	joypad.set(new_ctrls)
-end
-
-function m.sendCurrentFrame(frame)
-	local file = io.open("../data/cur_frame.dat", "wb")
-	if not file then return end
-
-	file:write("256,192\n")
-	file:write(frame)
-
-	file:close()
 end
 
 return m

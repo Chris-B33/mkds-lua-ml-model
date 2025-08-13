@@ -131,17 +131,4 @@ function m.getCurrentInputs()
 	return joypad.get()
 end
 
-function m.getCurrentFrame() -- TOO SLOW AND MAY NOT BE NEEDED SO NOT USING
-	local buffer = {} 
-
-	local width = 256
-	local height = 192
-	local size = width * height * 2
-
-	for i = 0, size - 1 do
-		buffer[i + 1] = string.char(memory.read_u8(m.addrs.frameImgData + i))
-	end
-	return table.concat(buffer)
-end
-
 return m

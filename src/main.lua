@@ -5,11 +5,10 @@ local files = require("files")
 while true do
 	local stats = data.getRacerStats()
 	local RLApplicableRacerStats = data.getRLApplicableRacerStats()
-	local ctrls = data.getCurrentInputs()
 
 	hud.drawHUD(stats)
 
-	files.sendStatsAndCtrls(RLApplicableRacerStats, ctrls)
+	files.sendStats(RLApplicableRacerStats)
 	--files.receiveCtrls()
 
 	if stats then data.prevData = stats end
