@@ -1,10 +1,10 @@
-local mem = require("mem")
+local data = require("data")
 local hud = require("hud")
 local files = require("files")
 
 while true do
-	local stats = mem.getRacerStats()
-	local ctrls = mem.getCurrentInputs()
+	local stats = data.getRacerStats()
+	local ctrls = data.getCurrentInputs()
 
 	hud.drawHUD(stats)
 

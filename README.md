@@ -3,17 +3,14 @@
 ## Description
 This is an attempt at creating a reinforcment learning model to play Mario Kart for the Nintendo DS. This project uses the Bizhawk emulator, its in-built Lua support and an external Python script to gain data from the game and train a model in real time on that data.
 
-The Lua scripts were heavily adapted from <a href="https://tasvideos.org/GameResources/DS/MarioKartDS">this script</a> I found online.
+The Lua scripts were heavily adapted from <a href="https://github.com/SuuperW/BizHawk-Lua-Scripts/tree/main">these scripts</a> I found online.
 
 ## TODO
 #### Lua
-- Send the current frame to Python.
 - Change how memory is read so you can set all addresses needed in a seperate file
-- Potentially create a socket-based pipeline
 
 #### Python
 - Open the ROM in the Bizhawk with the Lua scripts active.
-- Get the current frame either from Lua or directly with a library.
 - Write model to learn and dictate new moves.
 
 ## Finished for now

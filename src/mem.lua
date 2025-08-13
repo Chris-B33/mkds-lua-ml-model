@@ -11,123 +11,30 @@ end
 
 m.addrs = {
 	ptrRacerData = 0x0217ACF8 + ptrOffset,
-	ptrCheckNum = 0x021755FC + ptrOffset
+	ptrMapData = 0x02175600 + ptrOffset,
+	ptrRaceStatus = 0x021755FC + ptrOffset
 }
 
-local prevData = {
-	speed = 0,
-	acceleration = 0,
-	x = 0,
-	y = 0,
-	z = 0,
-	dx = 0,
-	dy = 0,
-	dz = 0,
-	drift_angle = 0,
-	delta_drift_angle = 0,
-	framesInAir = 0,
-	isGrounded = true,
-	isGoingBackwards = false,
-	checkpoint = 0,
-	keyCheckpoint = 0,
-	lap = 0,
-	frame = 0
-}
-
-local function get_s16(data, offset)
+function m.get_s16(data, offset)
 	local u = data[offset] | (data[offset + 1] << 8)
 	return u - ((data[offset + 1] & 0x80) << 9)
 end
 
-local function get_s32(data, offset)
+function m.get_u16(data, offset)
+	return data[offset] | (data[offset + 1] << 8)
+end
+
+function m.get_s32(data, offset)
 	local u = data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24)
 	return u - ((data[offset + 3] & 0x80) << 25)
 end
 
-local function get_pos(data, offset)
+function m.get_pos(data, offset)
 	return {
-		math.floor(get_s32(data, offset + 0)  / 4096),
-		math.floor(get_s32(data, offset + 4)  / 4096),
-		math.floor(get_s32(data, offset + 8)  / 4096),
+		math.floor(m.get_s32(data, offset + 0)  / 4096),
+		math.floor(m.get_s32(data, offset + 4)  / 4096),
+		math.floor(m.get_s32(data, offset + 8)  / 4096),
 	}
-end
-
-local function isRacerGoingBackwards()
-	local prevDomain = memory.getcurrentmemorydomain()
-    memory.usememorydomain("Main RAM")
-    local val = memory.read_s32_le(0x17B854)
-    memory.usememorydomain(prevDomain)
-    return val > 0
-end
-
-function m.getPlayerData()
-	local ptr = memory.read_u32_le(m.addrs.ptrRacerData)
-	if ptr == 0 then return nil end
-	return memory.read_bytes_as_array(ptr + 1, 0x5a8 - 1)
-end
-
-function m.getCheckpointData()
-	local prevDomain = memory.getcurrentmemorydomain()
-    memory.usememorydomain("Main RAM")
-	local checkpointData = {
-		--checkpoint = memory.read_u8(m.addrs.ptrCheckNum + 0x46),
-		--keyCheckpoint = memory.read_u8(m.addrs.ptrCheckNum + 0x46),
-		lap = memory.read_u8(0x2C8AA0) + 1
-	}
-	memory.usememorydomain(prevDomain)
-	return checkpointData
-end
-
-function m.getRacerStats()
-	local playerData = m.getPlayerData()
-	local checkpointData = m.getCheckpointData()
-
-	if not playerData or not checkpointData then return nil end
-
-	local curSpeed = math.floor(get_s32(playerData, 0x2A8) / 256)
-	local curPos = get_pos(playerData, 0x80)
-	local curDriftAngle = math.floor(get_s16(playerData, 0x388) / 256) 
-	local framesInAir = get_s32(playerData, 0x380)
-
-	local newData = {
-		speed = curSpeed,
-		acceleration = prevData.speed - curSpeed,
-		x = curPos[1],
-		y = curPos[2],
-		z = curPos[3],
-		dx = prevData.x - curPos[1],
-		dy = prevData.y - curPos[2],
-		dz = prevData.z - curPos[3],
-		drift_angle = curDriftAngle,
-		delta_drift_angle = curDriftAngle - prevData.drift_angle,
-		framesInAir = framesInAir,
-		isGrounded = framesInAir == 0,
-		isGoingBackwards = isRacerGoingBackwards(),
-		checkpoint = checkpointData.checkpoint,
-		keyCheckpoint = checkpointData.keyCheckpoint,
-		lap = checkpointData.lap,
-		frame = emu.framecount()
-	}
-
-	prevData = newData
-	return newData
-end
-
-function m.getCurrentInputs()
-	return joypad.get()
-end
-
-function m.getCurrentFrame() -- TOO SLOW AND MAY NOT BE NEEDED SO NOT USING
-	local buffer = {} 
-
-	local width = 256
-	local height = 192
-	local size = width * height * 2
-
-	for i = 0, size - 1 do
-		buffer[i + 1] = string.char(memory.read_u8(m.addrs.frameImgData + i))
-	end
-	return table.concat(buffer)
 end
 
 return m
