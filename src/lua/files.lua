@@ -2,7 +2,7 @@ local m = {}
 
 function m.sendStats(stats)
 	if not stats then return end
-	local f = assert(io.open("../data/cur_stats.dat", "w+"))
+	local f = assert(io.open("../../data/cur_stats.dat", "w+"))
 	local buffer = ""
 
 	for stat, value in pairs(stats) do
@@ -14,7 +14,7 @@ function m.sendStats(stats)
 end
 
 function m.receiveCtrls()
-	local file = assert(io.open("../data/new_ctrls.dat", "r"))
+	local file = assert(io.open("../../data/new_ctrls.dat", "r"))
 
     local new_ctrls = {}
     for line in file:lines() do
