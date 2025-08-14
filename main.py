@@ -20,7 +20,7 @@ def action_to_controls(action_idx):
 
 def main():
     print("Opening ROM...")
-    #open_rom(C.EMU_PATH, C.ROM_PATH)
+    open_rom(C.EMU_PATH, C.ROM_PATH)
 
     print("Loading agent...")
     state_dim = len(C.STAT_KEYS)
@@ -41,7 +41,7 @@ def main():
             print("                     ", end="\r")
             
         stats = read_stats(C.STATS_FILE)
-        if stats is None:
+        if stats is None or stats == prev_stats:
             time.sleep(0.005)
             continue
 
@@ -69,8 +69,6 @@ def main():
             agent.save(C.CHECKPOINT_PATH)
 
 if __name__ == "__main__":
-    main_thread = threading.Thread(target=main, daemon=true)
+    main_thread = threading.Thread(target=main, daemon=True)
     main_thread.start()
-
-    gui_thread = threading.Thread(target=run_gui, args=(action_rewards), daemon=true)
-    gui_thread.start()
+    run_gui(action_rewards)

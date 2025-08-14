@@ -10,8 +10,11 @@ def run_gui(action_rewards):
     rewards = list(action_rewards.values())
     
     bars = ax.bar(actions, rewards, color='skyblue')
-    ax.set_ylabel("Reward")
-    ax.set_title("RL Actions and Rewards")
+    ax.axhline(0, color='black', linewidth=1)
+    ax.set_ylabel("Rewards")
+    ax.set_title("Actions")
+
+    ax.set_xticklabels([f"{a}\n{r:.2f}" for a, r in zip(actions, rewards)])
 
     def update(frame):
         rewards = list(action_rewards.values())
@@ -19,30 +22,27 @@ def run_gui(action_rewards):
 
         for i, bar in enumerate(bars):
             bar.set_height(rewards[i])
-            bar.set_color('yellow' if i == max_index else 'skyblue')
+            if i == max_index: bar.set_color('yellow')
+            elif rewards[i] < 0: bar.set_color('red')
+            else: bar.set_color('skyblue')
 
         current_values = list(action_rewards.values())
-        ax.set_ylim(min(current_values) * 1.1, max(current_values) * 1.1 if max(current_values)!=0 else 1)
+        ax.set_xticks(range(len(actions)))
+        ax.set_xticklabels([f"{a}\n{r:.2f}" for a, r in zip(actions, rewards)])
+        ax.set_ylim(min(current_values), max(current_values) * 1.1 if max(current_values)!=0 else 1)
         return bars
 
     ani = FuncAnimation(fig, update, interval=50, blit=False)
     plt.show()
 
-
-# Example usage
 if __name__ == "__main__":
-    rewards = {"left": 0.2, "right": -0.5, "up": 0.1, "down": 0.0}
+    rewards = {"left": 1, "right": 1, "up": 1, "down": 0.0}
 
-    # Simulate rewards changing over time
     def simulate_rewards():
         while True:
             for k in rewards:
-                rewards[k] += random.uniform(-0.05, 0.05)
+                rewards[k] += random.uniform(-0.055, 0.05)
             time.sleep(0.05)
 
     threading.Thread(target=simulate_rewards, daemon=True).start()
-    threading.Thread(target=run_gui, args=(rewards,), daemon=True).start()
-
-    # Keep main program running
-    while True:
-        time.sleep(1)
+    run_gui(rewards)
