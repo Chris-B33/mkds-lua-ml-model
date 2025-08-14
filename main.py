@@ -69,8 +69,8 @@ def main():
             agent.save(C.CHECKPOINT_PATH)
 
 if __name__ == "__main__":
-    main_thread = threading.Thread(target=main)
+    main_thread = threading.Thread(target=main, daemon=true)
     main_thread.start()
 
-    gui_thread = threading.Thread(target=run_gui, args=(action_rewards))
+    gui_thread = threading.Thread(target=run_gui, args=(action_rewards), daemon=true)
     gui_thread.start()
