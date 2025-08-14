@@ -2,10 +2,13 @@ import time
 import threading
 import numpy as np
 
-from src.model.interface import open_rom, read_stats, write_ctrls
 from src.model.agent import DQNAgent
-from src.model.rewards import compute_reward
 from src.model import config as C
+from src.model.gui import run_gui
+from src.model.interface import open_rom, read_stats, write_ctrls
+from src.model.rewards import compute_reward
+
+action_rewards = dict.fromkeys(C.ACTIONS[0].keys, 0.0) # needs to be modified in main somehow
 
 def stats_to_state(stats_dict):
     return np.array([float(stats_dict[k]) for k in C.STAT_KEYS], dtype=np.float32)
@@ -66,5 +69,8 @@ def main():
             agent.save(C.CHECKPOINT_PATH)
 
 if __name__ == "__main__":
-    thread = threading.Thread(target=main)
-    thread.start()
+    main_thread = threading.Thread(target=main)
+    main_thread.start()
+
+    gui_thread = threading.Thread(target=run_gui, args=(action_rewards))
+    gui_thread.start()
