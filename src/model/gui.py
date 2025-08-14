@@ -15,7 +15,7 @@ def run_gui(action_rewards):
 
     def update(frame):
         rewards = list(action_rewards.values())
-        max_index = rewards.index(max(rewards)
+        max_index = rewards.index(max(rewards))
 
         for i, bar in enumerate(bars):
             bar.set_height(rewards[i])
