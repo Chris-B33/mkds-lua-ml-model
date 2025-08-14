@@ -14,9 +14,13 @@ def run_gui(action_rewards):
     ax.set_title("RL Actions and Rewards")
 
     def update(frame):
-        for bar, action in zip(bars, actions):
-            bar.set_height(action_rewards[action])
-        # Adjust y-axis automatically to fit current rewards
+        rewards = list(action_rewards.values())
+        max_index = rewards.index(max(rewards)
+
+        for i, bar in enumerate(bars):
+            bar.set_height(rewards[i])
+            bar.set_color('yellow' if i == max_index else 'skyblue')
+
         current_values = list(action_rewards.values())
         ax.set_ylim(min(current_values) * 1.1, max(current_values) * 1.1 if max(current_values)!=0 else 1)
         return bars
