@@ -1,4 +1,3 @@
-import time
 import threading
 import numpy as np
 
@@ -8,19 +7,19 @@ from src.model.gui import run_gui
 from src.model.interface import open_rom, read_stats, write_ctrls
 from src.model.rewards import compute_reward
 
-action_rewards = dict.fromkeys(C.ACTIONS[0].keys, 0.0) # needs to be modified in main somehow
+action_rewards = dict.fromkeys(C.ACTIONS.keys(), 0.0) # needs to be modified in main somehow
 
 def stats_to_state(stats_dict):
+    if len(stats_dict) == 0: return None
     return np.array([float(stats_dict[k]) for k in C.STAT_KEYS], dtype=np.float32)
 
 def action_to_controls(action_idx):
     controls = {"A": 0, "B": 0, "Left": 0, "Right": 0}
-    controls.update(C.ACTIONS[action_idx])
+    controls.update(list(C.ACTIONS.values())[action_idx])
     return controls
 
 def main():
-    print("Opening ROM...")
-    open_rom(C.EMU_PATH, C.ROM_PATH)
+    #open_rom(C.EMU_PATH, C.ROM_PATH)
 
     print("Loading agent...")
     state_dim = len(C.STAT_KEYS)
@@ -41,11 +40,11 @@ def main():
             print("                     ", end="\r")
             
         stats = read_stats(C.STATS_FILE)
-        if stats is None or stats == prev_stats:
-            time.sleep(0.005)
-            continue
+        if stats is None or stats == prev_stats: continue
 
         state = stats_to_state(stats)
+        if state is None: continue
+
         action_idx = agent.act(state)
         controls = action_to_controls(action_idx)
         write_ctrls(C.CONTROLS_FILE, controls)

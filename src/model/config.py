@@ -18,12 +18,12 @@ STAT_KEYS = [
     "lap",
 ]
 
-ACTIONS = [
-    {"A":1, "B":0, "Left":1, "Right":0},  # throttle + steer left
-    {"A":1, "B":0, "Left":0, "Right":0},  # throttle + straight
-    {"A":1, "B":0, "Left":0, "Right":1},  # throttle + steer right
-    {"A":0, "B":1, "Left":0, "Right":0},  # brake
-]
+ACTIONS = {
+    "throttle left": {"A":1, "B":0, "Left":1, "Right":0},
+    "throttle straight": {"A":1, "B":0, "Left":0, "Right":0},
+    "throttle right": {"A":1, "B":0, "Left":0, "Right":1},
+    "brake": {"A":0, "B":1, "Left":0, "Right":0}
+}
 
 # Hyperparameters
 GAMMA = 0.99

@@ -9,7 +9,7 @@ while true do
 	hud.drawHUD(stats)
 
 	files.sendStats(RLApplicableRacerStats)
-	--files.receiveCtrls()
+	files.receiveCtrls()
 
 	if stats then data.prevData = stats end
 	emu.frameadvance()

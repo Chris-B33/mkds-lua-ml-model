@@ -1,15 +1,14 @@
 def compute_progress(prev_stats, cur_stats) -> float:
-    if prev_stats is None or cur_stats is None:
+    if len(prev_stats) == 0 or len(cur_stats) == 0:
         return 0.0
-    if "lap" not in prev_stats or "nextCheckpointNum" not in prev_stats:
-        print("Missing keys in prev_stats:", prev_stats)
+    
     prev_prog = (prev_stats['lap'] * 3) + prev_stats["nextCheckpointNum"] - 1
     curr_prog = (cur_stats['lap'] * 3) + cur_stats["nextCheckpointNum"] - 1
 
     return float(curr_prog - prev_prog)
 
 def compute_reward(prev_stats, cur_stats) -> float:
-    if cur_stats is None:
+    if len(cur_stats) == 0:
         return 0.0
     
     progress = compute_progress(prev_stats, cur_stats) * 5
