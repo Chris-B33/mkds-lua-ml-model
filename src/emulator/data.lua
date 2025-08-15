@@ -3,7 +3,7 @@ local checkpoint = require("checkpoints")
 
 local m = {}
 
-local MAX_SPEED = 150
+local MAX_SPEED = 120
 local MAX_ACCEL = 16
 local MAX_ANGLE = 45
 local MAX_DELTA_ANGLE = 45
@@ -29,7 +29,8 @@ m.prevData = {
 	nextCheckpointP1={x=0, y=0},
 	nextCheckpointP2={x=0, y=0},
 	lap = 0,
-	frame = 0
+	frame = 0,
+	episode_done = 0
 }
 
 local function isRacerGoingBackwards()
@@ -90,7 +91,8 @@ function m.getRacerStats()
 		nextCheckpointP2 = allCheckpoints[nextCheckpointNum].p2,
 		lap = lapNum,
 
-		frame = emu.framecount()
+		frame = emu.framecount(),
+		episode_done = 0
 	}
 
 	return newData
@@ -122,6 +124,7 @@ function m.getRLApplicableRacerStats()
         nextCheckpointP2y = (data.nextCheckpointP2.y - data.pos.y) / MAX_POS_DELTA,
 
         lap = data.lap / MAX_LAP,
+		episode_done = 0
     }
 
     return normData
