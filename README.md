@@ -8,11 +8,13 @@ The Lua scripts were heavily adapted from <a href="https://github.com/SuuperW/Bi
 ## TODO
 #### Lua
 - Change how memory is read so all addresses needed are referenced from a seperate file.
+- Setup socket server.
 
 #### Python
 - Open the ROM in the Bizhawk with the Lua scripts active.
 - Write model to learn and dictate new moves.
 - Load save states by file.
+- Setup socket server.
 
 ## Finished for now
 #### Lua
@@ -27,4 +29,4 @@ The Lua scripts were heavily adapted from <a href="https://github.com/SuuperW/Bi
 - Send new controls to a file to be read by the Lua scripts.
 
 ## Current Objective
-Create basic RL model based on given stats.
+Transfer too slow for RL model. Need to make socket server first.
