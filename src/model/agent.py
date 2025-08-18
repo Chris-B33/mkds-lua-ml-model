@@ -21,7 +21,7 @@ class QNet(nn.Module):
         return self.net(x)
 
 class DQNAgent:
-    def __init__(self, state_dim, n_actions, noise_scale=0.01):
+    def __init__(self, state_dim, n_actions, noise_scale=0.1):
         self.state_dim = state_dim
         self.n_actions = n_actions
         self.noise_scale = noise_scale
@@ -44,30 +44,24 @@ class DQNAgent:
     def act(self, state_vec=None):
         self.steps += 1
 
-        # Case 1: no state available yet
         if state_vec is None:
             if self.prev_rewards is not None:
-                # Add noise to previous Q-values for exploration
                 noisy_q = self.prev_rewards + torch.randn_like(self.prev_rewards) * self.noise_scale
                 self.prev_rewards = noisy_q
                 return noisy_q
             else:
-                # First step: no state, no prev_rewards → return random tensor
                 rand_q = torch.randn(1, self.n_actions, device=device)
                 self.prev_rewards = rand_q
                 return rand_q
 
-        # Case 2: we have a valid state vector
         s = torch.tensor(state_vec, dtype=torch.float32, device=device).unsqueeze(0)
         q = self.q_online(s)
 
-        # Exploration: add noise to Q-values with probability epsilon
         if np.random.rand() < self.epsilon():
             noisy_q = q + torch.randn_like(q) * self.noise_scale
             self.prev_rewards = noisy_q
             return noisy_q
 
-        # Exploitation: pick best action
         self.prev_rewards = q
         return q
 

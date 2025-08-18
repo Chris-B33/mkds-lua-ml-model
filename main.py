@@ -1,6 +1,7 @@
 import torch, time
 import threading
 import numpy as np
+from datetime import datetime
 
 from src.model.agent import DQNAgent
 from src.model import config as C
@@ -68,6 +69,7 @@ def main():
 
         if agent.steps % C.SAVE_EVERY_STEPS == 0 and agent.steps > 0:
             agent.save(C.CHECKPOINT_PATH)
+            print(f"{datetime.now().strftime('%H:%M:%S')} [SAVE]: Model saved to '{C.CHECKPOINT_PATH}'")
 
 if __name__ == "__main__":
     main_thread = threading.Thread(target=main, daemon=True)

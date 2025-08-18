@@ -29,7 +29,7 @@ def run_gui(action_rewards):
         current_values = list(action_rewards.values())
         ax.set_xticks(range(len(actions)))
         ax.set_xticklabels([f"{a}\n{r:.2f}" for a, r in zip(actions, rewards)])
-        ax.set_ylim(min(current_values), max(current_values) * 1.1 if max(current_values)!=0 else 1)
+        ax.set_ylim(min(0, min(current_values)), max(0, max(current_values)) * 1.1 if max(current_values)!=0 else 1)
         return bars
 
     ani = FuncAnimation(fig, update, interval=50, blit=False)
