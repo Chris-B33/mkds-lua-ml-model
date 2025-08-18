@@ -15,8 +15,8 @@ function m.needsReset(stats)
 	    SLOWNESS_FRAME_COUNT = 0
 	end
 
-    -- No checkpoint progress = reset
-    if stats.nextCheckpointNum == last_checkpoint then 
+    -- No checkpoint progress or going backwards = reset
+    if stats.nextCheckpointNum == last_checkpoint or stats.isGoingBackwards == 1 then 
         NO_PROGRESS_FRAME_COUNT = NO_PROGRESS_FRAME_COUNT + 1
     else
         NO_PROGRESS_FRAME_COUNT = 0

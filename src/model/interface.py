@@ -1,10 +1,13 @@
 import subprocess
 
-def open_rom(emu_path, rom_path) -> None:
-    print(f"Opening ROM at: '{rom_path}\nIn emulator at: {emu_path}'")
+def open_rom(emu_path, rom_path, socket_host, socket_port) -> None:
+    print(f"Opening EmuHawk:\nPath: {emu_path}'\nROM: {rom_path}\nHost: {socket_host}\nPort: {socket_port}")
+
     subprocess.Popen([
         emu_path,
-        f'--rom="{rom_path}"'
+        #f"--rom='{rom_path}'",
+        f"--socket_ip={socket_host}",
+        f"--socket_port={socket_port}"
     ])
 
 def read_stats(file) -> dict:

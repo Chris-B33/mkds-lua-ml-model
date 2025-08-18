@@ -31,3 +31,22 @@ The Lua scripts were heavily adapted from <a href="https://github.com/SuuperW/Bi
 
 ## Current Objective
 Transfer too slow for RL model. Need to make socket server first.
+
+## Installation
+- Put this repo in the same directory as Bizhawk so it looks similar to:
+<br>--BizHawk--
+<br>¬> dll
+<br>¬> Gameboy
+<br>¬> gamedb
+<br>¬> Lua
+<br>¬> mkds-lua-ml-model
+<br>¬> NDS
+<br>¬> NES
+<br>¬> overlay
+<br>¬> Shaders
+<br>-Emuhawk.exe
+
+- Run main.py.
+- Open ROM.
+- Open the Lua console from Tools>Lua Console.
+- Run src/emulator/main.lua.

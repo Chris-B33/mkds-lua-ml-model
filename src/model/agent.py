@@ -21,9 +21,10 @@ class QNet(nn.Module):
         return self.net(x)
 
 class DQNAgent:
-    def __init__(self, state_dim, n_actions):
+    def __init__(self, state_dim, n_actions, noise_scale=0.01):
         self.state_dim = state_dim
         self.n_actions = n_actions
+        self.noise_scale = noise_scale
 
         self.q_online = QNet(state_dim, n_actions).to(device)
         self.q_target = QNet(state_dim, n_actions).to(device)
@@ -34,19 +35,41 @@ class DQNAgent:
         self.replay = ReplayBuffer(C.REPLAY_SIZE)
 
         self.steps = 0
+        self.prev_rewards = None
 
     def epsilon(self):
         eps = C.EPS_END + max(0.0, (C.EPS_START - C.EPS_END) * (1 - self.steps / C.EPS_DECAY_FRAMES))
         return float(max(C.EPS_END, eps))
 
-    def act(self, state_vec):
+    def act(self, state_vec=None):
         self.steps += 1
+
+        # Case 1: no state available yet
+        if state_vec is None:
+            if self.prev_rewards is not None:
+                # Add noise to previous Q-values for exploration
+                noisy_q = self.prev_rewards + torch.randn_like(self.prev_rewards) * self.noise_scale
+                self.prev_rewards = noisy_q
+                return noisy_q
+            else:
+                # First step: no state, no prev_rewards → return random tensor
+                rand_q = torch.randn(1, self.n_actions, device=device)
+                self.prev_rewards = rand_q
+                return rand_q
+
+        # Case 2: we have a valid state vector
+        s = torch.tensor(state_vec, dtype=torch.float32, device=device).unsqueeze(0)
+        q = self.q_online(s)
+
+        # Exploration: add noise to Q-values with probability epsilon
         if np.random.rand() < self.epsilon():
-            return np.random.randint(self.n_actions)
-        with torch.no_grad():
-            s = torch.tensor(state_vec, dtype=torch.float32, device=device).unsqueeze(0)
-            q = self.q_online(s)
-            return int(torch.argmax(q, dim=1).item())
+            noisy_q = q + torch.randn_like(q) * self.noise_scale
+            self.prev_rewards = noisy_q
+            return noisy_q
+
+        # Exploitation: pick best action
+        self.prev_rewards = q
+        return q
 
     def remember(self, s, a, r, ns, done):
         self.replay.push(s, a, r, ns, done)

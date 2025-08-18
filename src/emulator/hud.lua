@@ -2,7 +2,7 @@ local m = {}
 
 function m.drawHUD(stats)
 	if not stats then
-		gui.text(5, 595, "No racer data")
+		gui.text(5, 495, "No racer data")
 		return
 	end
 	

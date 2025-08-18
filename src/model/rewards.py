@@ -16,6 +16,7 @@ def compute_reward(prev_stats, cur_stats) -> float:
     speed_term = 0.05 * float(cur_stats["speed"])
     backwards_pen = 0.5 if cur_stats["isGoingBackwards"] > 0.0 else 0.0
     air_pen = 0.02 * float(cur_stats["framesInAir"])
+    episode_done_pen = 10.0 if cur_stats["episode_done"] == 1 else 0.0
 
-    reward = progress + speed_term - backwards_pen - air_pen
+    reward = progress + speed_term - backwards_pen - air_pen -  episode_done_pen
     return reward
