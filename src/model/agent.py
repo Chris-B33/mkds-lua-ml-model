@@ -21,7 +21,7 @@ class QNet(nn.Module):
         return self.net(x)
 
 class DQNAgent:
-    def __init__(self, state_dim, n_actions, noise_scale=0.1):
+    def __init__(self, state_dim, n_actions, noise_scale=0.01):
         self.state_dim = state_dim
         self.n_actions = n_actions
         self.noise_scale = noise_scale

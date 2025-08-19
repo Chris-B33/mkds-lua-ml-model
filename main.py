@@ -1,4 +1,4 @@
-import torch, time
+import torch
 import threading
 import numpy as np
 from datetime import datetime
@@ -6,11 +6,11 @@ from datetime import datetime
 from src.model.agent import DQNAgent
 from src.model import config as C
 from src.model.gui import run_gui
-from src.model.interface import open_rom, read_stats, write_ctrls
+from src.model.interface import open_rom
 from src.model.rewards import compute_reward
 from src.model.server import Server
 
-action_rewards = dict.fromkeys(C.ACTIONS.keys(), 0.0) # needs to be modified in main somehow
+action_rewards = dict.fromkeys(C.ACTIONS.keys(), 0.0)
 
 def stats_to_state(stats_dict):
     if len(stats_dict) == 0: return None
@@ -23,7 +23,7 @@ def update_rewards(new_rewards):
 def main():
     print("Initializing server and emulator...")
     server = Server(C.SOCKET_HOST, int(C.SOCKET_PORT))
-    open_rom(C.EMU_PATH, C.ROM_PATH, C.SOCKET_HOST, C.SOCKET_PORT)
+    open_rom(C.EMU_PATH, C.SOCKET_HOST, C.SOCKET_PORT)
     server.accept_connection()
 
     print("Loading agent...")
